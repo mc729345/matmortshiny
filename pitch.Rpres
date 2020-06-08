@@ -1,0 +1,49 @@
+Visualizing Maternal Mortality
+========================================================
+author: Mike W
+date: `r format(Sys.time(), "%B %d, %Y")`
+autosize: true
+transition: rotate
+
+<style>
+.small-code pre code {
+  font-size: 10px;
+}
+</style> 
+
+```{r setup, include = FALSE}
+library(tidyverse)
+matmort <- read.csv("number-of-maternal-deaths.csv")
+
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+Background
+========================================================
+- Maternal mortality is a public health issue in developing countries and even some industrialized nations.
+- I used *R Markdown* and *Shiny* to graph maternal mortality trends over time, and illustrate global disparities.
+- Specifically, I plotted each country’s **Maternal Mortality Ratio**, defined as “the number of women who die from pregnancy-related causes while pregnant or within 42 days of pregnancy termination per 100,000 live births.” 
+- Data were downloaded from Our World in Data, which has visualized numerous metrics of maternal health.
+
+Global Trends
+========================================================
+class: small-code
+- Here, we display the mean and median Maternal Mortality Ratio among all countries. We can see a clear reduction in maternal mortality over time. 
+```{r stats}
+summarystats <- matmort %>% group_by(Year) %>% filter(Code != "") %>% summarize(Mean = mean(X), Median = median(X), Mode = getmode(X))
+as.data.frame(summarystats)
+```
+Our Shiny app
+========================================================
+- Here is a screenshot of our *Shiny* app
+![Screenshot of Shiny app](screenshotshiny.png)
+
+Summary
+========================================================
+- Our *Shiny* application allows us to easily visualize maternal mortality data among many countries and regions, and view trends over time. 
+- We have also demonstrated the ease and flexibility of using *RPres*. It is capable of building and publishing an attractive slidedeck with embedded R code and also images.
+
+**References**
+- Max Roser and Hannah Ritchie (2013) - "Maternal Mortality". Published online at OurWorldInData.org. Retrieved from: 'https://ourworldindata.org/maternal-mortality' [Online Resource]
